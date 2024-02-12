@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: runner
+  namespace: bootcamp
+  labels: 
+    app: bootcamp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bootcamp
+  template:
+    metadata:
+      labels:
+        app: bootcamp
+    spec:
+      containers:
+        - name: runner
+          image: docker.io/meherliatrio/k8s-ghrunner:v3
+          ports:
+            - containerPort: 8081
+          env:
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gh-secret
+                  key: TOKEN
+            - name: REPO
+              valueFrom:
+                secretKeyRef:
+                  name: gh-secret
+                  key: REPO
